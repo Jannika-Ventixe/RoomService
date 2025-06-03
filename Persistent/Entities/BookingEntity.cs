@@ -1,14 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace RoomService.Entities;
+namespace Persistence.Entities;
 
-public class RoomEntity
+public class BookingEntity
 {
     [Key]
     public string Id { get; set; } = Guid.NewGuid().ToString();
 
-    public string RoomId { get; set; } = null!;
-    public string Name { get; set; } = null!;
+    [Required]
     public string CustomerName { get; set; } = null!;
 
     [Required]
@@ -19,4 +18,8 @@ public class RoomEntity
     [DataType(DataType.Date)]
     public DateTime EndDate { get; set; }
 
+    [Required]
+    public string RoomId { get; set; } = null!;
+    public RoomEntity Room { get; set; } = null!;
 }
+
