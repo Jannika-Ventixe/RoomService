@@ -17,9 +17,6 @@ builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer(builder.Configura
 var app = builder.Build();
 app.MapOpenApi();
 app.MapControllers();
-if (app.Environment.IsDevelopment())
-{
-}
 
     app.UseSwagger();
     app.UseSwaggerUI(c =>
@@ -28,14 +25,12 @@ if (app.Environment.IsDevelopment())
         c.RoutePrefix = string.Empty;
     });
 app.UseHttpsRedirection();
-
-//app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
-//using (var scope = app.Services.CreateScope())
-//{
-//    await AppSeeder.SeedDb(scope.ServiceProvider);
-//}
+using (var scope = app.Services.CreateScope())
+{
+    await AppSeeder.SeedDb(scope.ServiceProvider);
+}
 
 app.Run();

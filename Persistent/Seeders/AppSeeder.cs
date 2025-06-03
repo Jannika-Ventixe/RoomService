@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Persistence.Data;
 using Persistence.Entities;
+
+//Fick hjälp av Emil med denna
 
 namespace Persistence.Seeders;
 
@@ -16,8 +13,7 @@ public static class AppSeeder
         var db = services.GetRequiredService<DataContext>();
 
         if (db.Rooms.Any()) return;
-
-        // Skapa 10 paket
+      
         var packages = new List<PackageEntity>
         {
             new() { Title = "Standard", RoomDescription = "Basic room package", Price = 799, Currency = "SEK" },
@@ -34,8 +30,7 @@ public static class AppSeeder
 
         await db.Packages.AddRangeAsync(packages);
         await db.SaveChangesAsync();
-
-        // Skapa 10 rum och koppla slumpmässiga paket
+        
         var random = new Random();
         var rooms = new List<RoomEntity>();
         var roomPackages = new List<RoomPackagesEntity>();
@@ -51,8 +46,7 @@ public static class AppSeeder
 
             rooms.Add(room);
             db.Rooms.Add(room);
-
-            // Lägg till 2 slumpmässiga paket per rum
+            
             var selectedPackages = packages.OrderBy(_ => random.Next()).Take(2).ToList();
             foreach (var package in selectedPackages)
             {
@@ -63,7 +57,6 @@ public static class AppSeeder
                 });
             }
         }
-
         await db.RoomsPackages.AddRangeAsync(roomPackages);
         await db.SaveChangesAsync();
     }

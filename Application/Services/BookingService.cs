@@ -31,9 +31,7 @@ public class BookingService(IRoomRepository roomRepository, IBookingRepository b
             Success = false,
             Error = "Could not retrieve rooms."
         };
-
     }
-
     public async Task<RoomResult<Room?>> GetAsync(string roomId)
     {
         var result = await _roomRepository.GetAsync(x => x.Id == roomId);
@@ -76,9 +74,7 @@ public class BookingService(IRoomRepository roomRepository, IBookingRepository b
                 Success = false,
                 Error = ex.Message,
             };
-
-        }
-        
+        }        
     }
 }
 
