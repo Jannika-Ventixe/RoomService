@@ -16,23 +16,23 @@ builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer(builder.Configura
 
 var app = builder.Build();
 app.MapOpenApi();
-
+app.MapControllers();
 if (app.Environment.IsDevelopment())
 {
+}
+
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Room Service API");
         c.RoutePrefix = string.Empty;
     });
-}
-
 app.UseHttpsRedirection();
-app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
-app.UseAuthentication();
+//app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 //using (var scope = app.Services.CreateScope())
 //{
 //    await AppSeeder.SeedDb(scope.ServiceProvider);

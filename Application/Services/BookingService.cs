@@ -17,9 +17,11 @@ public class BookingService(IRoomRepository roomRepository, IBookingRepository b
         {
             var rooms = result.Result.Select(x => new Room
             {
+                Id = x.Id,
                 Image = x.Image,
                 Title = x.Title,
-                Description = x.Description
+                Description = x.Description,
+               
             });
 
             return new RoomResult<IEnumerable<Room>> { Success = true, Result = rooms };
