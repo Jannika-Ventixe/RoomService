@@ -12,5 +12,6 @@ public class PackageEntity
 
     [Column(TypeName = "decimal(18,2)")]
     public decimal Price { get; set; }
-    public string? Currency {  get; set; }
+    public string? Currency { get; set; } = "SEK";
+    
 }

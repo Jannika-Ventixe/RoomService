@@ -45,7 +45,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("Bookings");
+                    b.ToTable("RoomBookings");
                 });
 
             modelBuilder.Entity("Persistence.Entities.PackageEntity", b =>
@@ -97,21 +97,15 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Persistence.Entities.RoomPackagesEntity", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<string>("RoomId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("PackageId")
                         .HasColumnType("int");
 
-                    b.Property<string>("RoomId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
+                    b.HasKey("RoomId", "PackageId");
 
                     b.HasIndex("PackageId");
-
-                    b.HasIndex("RoomId");
 
                     b.ToTable("RoomsPackages");
                 });
@@ -121,7 +115,7 @@ namespace Persistence.Migrations
                     b.HasOne("Persistence.Entities.RoomEntity", "Room")
                         .WithMany("Bookings")
                         .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Room");
@@ -138,7 +132,7 @@ namespace Persistence.Migrations
                     b.HasOne("Persistence.Entities.RoomEntity", "Room")
                         .WithMany("Packages")
                         .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Package");

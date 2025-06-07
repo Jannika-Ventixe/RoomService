@@ -9,7 +9,8 @@ public class RoomEntity
     public string? Image { get; set; }
     public string Title { get; set; } = null!;
     public string Description { get; set; } = null!;
-    public ICollection<RoomPackagesEntity> Packages { get; set; } = [];
     public ICollection<BookingEntity> Bookings { get; set; } = [];
+
+    public ICollection<RoomPackagesEntity> Packages { get; set; } = [];
 }
 

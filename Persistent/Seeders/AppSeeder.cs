@@ -10,10 +10,13 @@ public static class AppSeeder
 {
     public static async Task SeedDb(IServiceProvider services)
     {
-        var db = services.GetRequiredService<DataContext>();
+        using var scope = services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<DataContext>();
 
+        // Avsluta om databasen redan har rum
         if (db.Rooms.Any()) return;
-      
+
+        // Skapa paket
         var packages = new List<PackageEntity>
         {
             new() { Title = "Standard", RoomDescription = "Basic room package", Price = 799, Currency = "SEK" },
@@ -30,34 +33,40 @@ public static class AppSeeder
 
         await db.Packages.AddRangeAsync(packages);
         await db.SaveChangesAsync();
-        
+
         var random = new Random();
         var rooms = new List<RoomEntity>();
-        var roomPackages = new List<RoomPackagesEntity>();
+        var roomPackageRelations = new List<RoomPackagesEntity>();
 
         for (int i = 1; i <= 10; i++)
         {
             var room = new RoomEntity
             {
-                Title = $"Rum {i}",
-                Description = $"Detta är beskrivningen för rum {i}.",
-                Image = $"room{i}.jpg",
+                Title = $"Room {i}",
+                Description = $"Room {i} description.",
+                Image = $"room{i}.jpg"
             };
 
             rooms.Add(room);
-            db.Rooms.Add(room);
-            
-            var selectedPackages = packages.OrderBy(_ => random.Next()).Take(2).ToList();
-            foreach (var package in selectedPackages)
+
+            // Koppla detta rum till 1–3 slumpmässiga paket
+            var packageCount = random.Next(1, 4);
+            var selectedPackages = packages.OrderBy(x => random.Next()).Take(packageCount).ToList();
+
+            foreach (var pkg in selectedPackages)
             {
-                roomPackages.Add(new RoomPackagesEntity
+                roomPackageRelations.Add(new RoomPackagesEntity
                 {
                     Room = room,
-                    Package = package
+                    Package = pkg
                 });
             }
         }
-        await db.RoomsPackages.AddRangeAsync(roomPackages);
+
+        await db.Rooms.AddRangeAsync(rooms);
+        await db.SaveChangesAsync();
+
+        await db.AddRangeAsync(roomPackageRelations);
         await db.SaveChangesAsync();
     }
 }

@@ -26,10 +26,11 @@ public class BookingService(IRoomRepository roomRepository, IBookingRepository b
 
             return new RoomResult<IEnumerable<Room>> { Success = true, Result = rooms };
         }
+
         return new RoomResult<IEnumerable<Room>>
         {
             Success = false,
-            Error = "Could not retrieve rooms."
+            Error = "Could not retrieve rooms. Server error: " + result.Error
         };
     }
     public async Task<RoomResult<Room?>> GetAsync(string roomId)
@@ -39,6 +40,7 @@ public class BookingService(IRoomRepository roomRepository, IBookingRepository b
         {
             var CurrentRoom = new Room
             {
+                Id = result.Result.Id,
                 Image = result.Result.Image,
                 Title = result.Result.Title,
                 Description = result.Result.Description

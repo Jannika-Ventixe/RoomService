@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -42,7 +42,7 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Bookings",
+                name: "RoomBookings",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -53,26 +53,25 @@ namespace Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Bookings", x => x.Id);
+                    table.PrimaryKey("PK_RoomBookings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Bookings_Rooms_RoomId",
+                        name: "FK_RoomBookings_Rooms_RoomId",
                         column: x => x.RoomId,
                         principalTable: "Rooms",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "RoomsPackages",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     RoomId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     PackageId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RoomsPackages", x => x.Id);
+                    table.PrimaryKey("PK_RoomsPackages", x => new { x.RoomId, x.PackageId });
                     table.ForeignKey(
                         name: "FK_RoomsPackages_Packages_PackageId",
                         column: x => x.PackageId,
@@ -84,30 +83,25 @@ namespace Persistence.Migrations
                         column: x => x.RoomId,
                         principalTable: "Rooms",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Bookings_RoomId",
-                table: "Bookings",
+                name: "IX_RoomBookings_RoomId",
+                table: "RoomBookings",
                 column: "RoomId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RoomsPackages_PackageId",
                 table: "RoomsPackages",
                 column: "PackageId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RoomsPackages_RoomId",
-                table: "RoomsPackages",
-                column: "RoomId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Bookings");
+                name: "RoomBookings");
 
             migrationBuilder.DropTable(
                 name: "RoomsPackages");
